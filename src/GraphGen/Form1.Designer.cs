@@ -28,12 +28,44 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            lstPoints = new ListBox();
+            btnImportCsv = new Button();
+            SuspendLayout();
+            // 
+            // lstPoints
+            // 
+            lstPoints.FormattingEnabled = true;
+            lstPoints.ItemHeight = 15;
+            lstPoints.Location = new Point(328, 75);
+            lstPoints.Name = "lstPoints";
+            lstPoints.Size = new Size(120, 94);
+            lstPoints.TabIndex = 0;
+            // 
+            // btnImportCsv
+            // 
+            btnImportCsv.Location = new Point(328, 275);
+            btnImportCsv.Name = "btnImportCsv";
+            btnImportCsv.Size = new Size(176, 23);
+            btnImportCsv.TabIndex = 1;
+            btnImportCsv.Text = "Importer CSV";
+            btnImportCsv.UseVisualStyleBackColor = true;
+            btnImportCsv.Click += btnImportCsv_Click;
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Controls.Add(btnImportCsv);
+            Controls.Add(lstPoints);
+            Name = "Form1";
+            Text = "Form1";
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private ListBox lstPoints;
+        private Button btnImportCsv;
     }
 }
