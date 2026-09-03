@@ -1,0 +1,28 @@
+﻿using GraphGen.Services;
+
+namespace GraphGen.Tests
+{
+    public class CsvSeriesImporterTests
+    {
+        [Fact]
+        public void Import_DeuxLignesValides_RetourneDeuxPoints()
+        {
+            // Arrange : on prépare les données d'entrée
+            var lignes = new[]
+            {
+                "Date;Cours",
+                "2026-01-02;192.53",
+                "2026-01-03;193.15"
+            };
+            var importer = new CsvSeriesImporter();
+
+            // Act : on exécute la méthode qu'on veut tester
+            var resultat = importer.Import(lignes);
+
+            // Assert : on vérifie que le résultat est correct
+            Assert.Equal(2, resultat.Count);
+            Assert.Equal(192.53, resultat[0].Value);
+            Assert.Equal(new DateTime(2026, 1, 3), resultat[1].Date);
+        }
+    }
+}

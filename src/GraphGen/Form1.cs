@@ -1,4 +1,5 @@
 using GraphGen.Models;
+using GraphGen.Services;
 using System.Globalization;
 using System.IO;
 
@@ -21,8 +22,6 @@ namespace GraphGen
 
             lstPoints.Items.AddRange(lignes);
 
-
-
         }
 
         private void btnImportCsv_Click(object sender, EventArgs e)
@@ -35,14 +34,8 @@ namespace GraphGen
 
             var lignes = File.ReadAllLines(dialog.FileName);
 
-            var points = lignes
-                .Skip(1) // on saute l'en-tête "Date;Cours"
-                .Select(ligne => ligne.Split(';'))
-                .Select(champs => new DataPoint(
-                    DateTime.Parse(champs[0], CultureInfo.InvariantCulture),
-                    double.Parse(champs[1], CultureInfo.InvariantCulture)
-                ))
-                .ToList();
+            var importer = new CsvSeriesImporter();
+            var points = importer.Import(lignes);
 
             var series = new DataSeries("AAPL");
             series.Points.AddRange(points);
@@ -51,6 +44,7 @@ namespace GraphGen
             lstPoints.Items.AddRange(
                 series.Points.Select(p => $"{p.Date:dd.MM.yyyy} : {p.Value}").ToArray()
             );
+
         }
     }
 }
