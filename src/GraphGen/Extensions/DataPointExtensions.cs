@@ -17,5 +17,9 @@ namespace GraphGen.Extensions
                 yield return new DataPoint(point.Date, variation);
             }
         }
+        public static IEnumerable<DataPoint> InRange(this IEnumerable<DataPoint> points, DateTime debut, DateTime fin)
+        {
+            return points.Where(p => p.Date >= debut && p.Date <= fin);
+        }
     }
 }

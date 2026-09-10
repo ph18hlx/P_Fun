@@ -33,6 +33,10 @@
             clbSeries = new CheckedListBox();
             formsPlot1 = new ScottPlot.WinForms.FormsPlot();
             chkNormaliser = new CheckBox();
+            dtpDebut = new DateTimePicker();
+            dtpFin = new DateTimePicker();
+            label1 = new Label();
+            label2 = new Label();
             SuspendLayout();
             // 
             // btnImportCsv
@@ -66,9 +70,9 @@
             // 
             // formsPlot1
             // 
-            formsPlot1.Location = new Point(138, 48);
+            formsPlot1.Location = new Point(255, 38);
             formsPlot1.Name = "formsPlot1";
-            formsPlot1.Size = new Size(798, 489);
+            formsPlot1.Size = new Size(700, 489);
             formsPlot1.TabIndex = 4;
             // 
             // chkNormaliser
@@ -82,11 +86,47 @@
             chkNormaliser.UseVisualStyleBackColor = true;
             chkNormaliser.CheckedChanged += chkNormaliser_CheckedChanged;
             // 
+            // dtpDebut
+            // 
+            dtpDebut.Location = new Point(56, 537);
+            dtpDebut.Name = "dtpDebut";
+            dtpDebut.Size = new Size(200, 23);
+            dtpDebut.TabIndex = 6;
+            // 
+            // dtpFin
+            // 
+            dtpFin.Location = new Point(322, 537);
+            dtpFin.Name = "dtpFin";
+            dtpFin.Size = new Size(200, 23);
+            dtpFin.TabIndex = 7;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 537);
+            label1.Name = "label1";
+            label1.Size = new Size(28, 15);
+            label1.TabIndex = 8;
+            label1.Text = "Du :";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(268, 541);
+            label2.Name = "label2";
+            label2.Size = new Size(26, 15);
+            label2.TabIndex = 9;
+            label2.Text = "au :";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(984, 561);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Controls.Add(dtpFin);
+            Controls.Add(dtpDebut);
             Controls.Add(chkNormaliser);
             Controls.Add(formsPlot1);
             Controls.Add(clbSeries);
@@ -104,5 +144,9 @@
         private CheckedListBox clbSeries;
         private ScottPlot.WinForms.FormsPlot formsPlot1;
         private CheckBox chkNormaliser;
+        private DateTimePicker dtpDebut;
+        private DateTimePicker dtpFin;
+        private Label label1;
+        private Label label2;
     }
 }
