@@ -1,27 +1,21 @@
 using GraphGen.Models;
 using GraphGen.Services;
+using ScottPlot.Statistics;
 using System.Globalization;
 using System.IO;
 
 namespace GraphGen
 {
+   
     public partial class Form1 : Form
     {
+        private readonly SeriesRepository _repository = new();
+        private readonly Dictionary<string, DataSeries> _series;
         public Form1()
         {
             InitializeComponent();
-
-            var series = new DataSeries("AAPL");
-            series.Points.Add(new DataPoint(new DateTime(2026, 1, 2), 192.53));
-            series.Points.Add(new DataPoint(new DateTime(2026, 1, 3), 193.15));
-            series.Points.Add(new DataPoint(new DateTime(2026, 1, 4), 191.24));
-
-            var lignes = series.Points
-            .Select(point => $"{point.Date:dd.MM.yyyy} : {point.Value}")
-            .ToArray();
-
-            lstPoints.Items.AddRange(lignes);
-
+            _series = _repository.LoadAll().ToDictionary(serie => serie.Name);
+            RafraichirAffichage();
         }
 
         private void btnImportCsv_Click(object sender, EventArgs e)
@@ -33,26 +27,38 @@ namespace GraphGen
                 return;
 
             var lignes = File.ReadAllLines(dialog.FileName);
+            var points = new CsvSeriesImporter().Import(lignes);
 
-            var importer = new CsvSeriesImporter();
-            var points = importer.Import(lignes);
-
-            var series = new DataSeries("AAPL");
-            series.Points.AddRange(points);
-
-            lstPoints.Items.Clear();
-            lstPoints.Items.AddRange(
-                series.Points.Select(p => $"{p.Date:dd.MM.yyyy} : {p.Value}").ToArray()
-            );
-
+            AjouterOuMettreAJour("AAPL", points);
         }
 
         private async void btnImportApi_Click(object sender, EventArgs e)
         {
-            var importer = new ApiSeriesImporter();
-            var point = await importer.GetLatestRateAsync("EUR", "USD");
+            var point = await new ApiSeriesImporter().GetLatestRateAsync("EUR", "USD");
+            AjouterOuMettreAJour("EURUSD", new[] { point });
+        }
+        private void AjouterOuMettreAJour(string nom, IEnumerable<DataPoint> points)
+        {
+            if (!_series.TryGetValue(nom, out var series))
+            {
+                series = new DataSeries(nom);
+                _series[nom] = series;
+            }
 
-            lstPoints.Items.Add($"{point.Date:dd.MM.yyyy} : {point.Value}");
+            series.AddOrUpdate(points);
+            _repository.Save(series);
+            RafraichirAffichage();
+        }
+
+        private void RafraichirAffichage()
+        {
+            lstPoints.Items.Clear();
+            if (_series.Count == 0) return;
+
+            var derniere = _series.Values.Last(); // provisoire, avant la vraie liste de séries
+            lstPoints.Items.AddRange(
+                derniere.Points.Select(p => $"{p.Date:dd.MM.yyyy} : {p.Value}").ToArray()
+            );
         }
     }
 }
