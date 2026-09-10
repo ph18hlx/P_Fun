@@ -9,10 +9,11 @@ namespace GraphGen.Services
         {
             return lignesCsv
                 .Skip(1)
-                .Select(ligne => ligne.Split(';'))
+                .Where(ligne => !string.IsNullOrWhiteSpace(ligne))
+                .Select(ligne => ligne.Split(','))
                 .Select(champs => new DataPoint(
                     DateTime.Parse(champs[0], CultureInfo.InvariantCulture),
-                    double.Parse(champs[1], CultureInfo.InvariantCulture)
+                    double.Parse(champs[4], CultureInfo.InvariantCulture)
                 ))
                 .ToList();
         }
