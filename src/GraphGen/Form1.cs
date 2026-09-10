@@ -46,5 +46,13 @@ namespace GraphGen
             );
 
         }
+
+        private async void btnImportApi_Click(object sender, EventArgs e)
+        {
+            var importer = new ApiSeriesImporter();
+            var point = await importer.GetLatestRateAsync("EUR", "USD");
+
+            lstPoints.Items.Add($"{point.Date:dd.MM.yyyy} : {point.Value}");
+        }
     }
 }
