@@ -71,6 +71,7 @@
             // 
             // formsPlot1
             // 
+            formsPlot1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             formsPlot1.Location = new Point(255, 38);
             formsPlot1.Name = "formsPlot1";
             formsPlot1.Size = new Size(700, 489);
@@ -89,6 +90,7 @@
             // 
             // dtpDebut
             // 
+            dtpDebut.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             dtpDebut.CustomFormat = "dd.MM.yyyy";
             dtpDebut.Format = DateTimePickerFormat.Custom;
             dtpDebut.Location = new Point(56, 537);
@@ -99,6 +101,7 @@
             // 
             // dtpFin
             // 
+            dtpFin.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             dtpFin.CustomFormat = "dd.MM.yyyy";
             dtpFin.Format = DateTimePickerFormat.Custom;
             dtpFin.Location = new Point(322, 537);
@@ -150,8 +153,10 @@
             Controls.Add(clbSeries);
             Controls.Add(btnImporterApi);
             Controls.Add(btnImportCsv);
+            MinimumSize = new Size(900, 550);
             Name = "Form1";
-            Text = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "PTL - Plot Those Lines";
             ResumeLayout(false);
             PerformLayout();
         }

@@ -34,6 +34,18 @@ namespace GraphGen.Tests
         }
 
         [Fact]
+        public void Normalize_PremiereValeurZero_RetourneListeVide()
+        {
+            var points = new[]
+            {
+                new DataPoint(new DateTime(2026, 1, 1), 0),
+                new DataPoint(new DateTime(2026, 1, 2), 5)
+            };
+
+            Assert.Empty(points.Normalize());
+        }
+
+        [Fact]
         public void InRange_GardeSeulementLesPointsDansLaPeriode()
         {
             var points = new[]
