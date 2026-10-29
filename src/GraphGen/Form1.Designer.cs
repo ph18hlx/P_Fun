@@ -37,6 +37,7 @@
             dtpFin = new DateTimePicker();
             label1 = new Label();
             label2 = new Label();
+            btnImportJson = new Button();
             SuspendLayout();
             // 
             // btnImportCsv
@@ -78,7 +79,7 @@
             // chkNormaliser
             // 
             chkNormaliser.AutoSize = true;
-            chkNormaliser.Location = new Point(12, 170);
+            chkNormaliser.Location = new Point(12, 204);
             chkNormaliser.Name = "chkNormaliser";
             chkNormaliser.Size = new Size(105, 19);
             chkNormaliser.TabIndex = 5;
@@ -88,17 +89,23 @@
             // 
             // dtpDebut
             // 
+            dtpDebut.CustomFormat = "dd.MM.yyyy";
+            dtpDebut.Format = DateTimePickerFormat.Custom;
             dtpDebut.Location = new Point(56, 537);
             dtpDebut.Name = "dtpDebut";
             dtpDebut.Size = new Size(200, 23);
             dtpDebut.TabIndex = 6;
+            dtpDebut.ValueChanged += dtp_ValueChanged;
             // 
             // dtpFin
             // 
+            dtpFin.CustomFormat = "dd.MM.yyyy";
+            dtpFin.Format = DateTimePickerFormat.Custom;
             dtpFin.Location = new Point(322, 537);
             dtpFin.Name = "dtpFin";
             dtpFin.Size = new Size(200, 23);
             dtpFin.TabIndex = 7;
+            dtpFin.ValueChanged += dtp_ValueChanged;
             // 
             // label1
             // 
@@ -118,11 +125,22 @@
             label2.TabIndex = 9;
             label2.Text = "au :";
             // 
+            // btnImportJson
+            // 
+            btnImportJson.Location = new Point(12, 170);
+            btnImportJson.Name = "btnImportJson";
+            btnImportJson.Size = new Size(120, 23);
+            btnImportJson.TabIndex = 10;
+            btnImportJson.Text = "Importer JSON";
+            btnImportJson.UseVisualStyleBackColor = true;
+            btnImportJson.Click += btnImportJson_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(984, 561);
+            Controls.Add(btnImportJson);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(dtpFin);
@@ -148,5 +166,6 @@
         private DateTimePicker dtpFin;
         private Label label1;
         private Label label2;
+        private Button btnImportJson;
     }
 }

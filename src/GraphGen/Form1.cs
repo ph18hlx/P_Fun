@@ -1,21 +1,24 @@
 using GraphGen.Extensions;
 using GraphGen.Models;
 using GraphGen.Services;
-using ScottPlot.Statistics;
-using System.Globalization;
-using System.IO;
+using System.Text.Json;
 
 namespace GraphGen
 {
-
     public partial class Form1 : Form
     {
         private readonly SeriesRepository _repository = new();
         private readonly Dictionary<string, DataSeries> _series;
+
         public Form1()
         {
             InitializeComponent();
             _series = _repository.LoadAll().ToDictionary(serie => serie.Name);
+
+            // Période affichée par défaut : les 2 dernières années
+            dtpFin.Value = DateTime.Today;
+            dtpDebut.Value = DateTime.Today.AddYears(-2);
+
             RafraichirAffichage();
         }
 
@@ -33,11 +36,31 @@ namespace GraphGen
             AjouterOuMettreAJour(nom, points);
         }
 
+        private void btnImportJson_Click(object sender, EventArgs e)
+        {
+            using var dialog = new OpenFileDialog();
+            dialog.Filter = "Fichiers JSON (*.json)|*.json";
+            if (dialog.ShowDialog() != DialogResult.OK) return;
+
+            try
+            {
+                var json = File.ReadAllText(dialog.FileName);
+                var serie = new JsonSeriesImporter().Import(json);
+                AjouterOuMettreAJour(serie.Name.ToUpperInvariant(), serie.Points);
+            }
+            catch (Exception ex) when (ex is JsonException or FormatException)
+            {
+                MessageBox.Show($"Fichier JSON invalide : {ex.Message}",
+                    "Erreur d'import", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private async void btnImportApi_Click(object sender, EventArgs e)
         {
             var point = await new ApiSeriesImporter().GetLatestRateAsync("EUR", "USD");
             AjouterOuMettreAJour("EURUSD", new[] { point });
         }
+
         private void AjouterOuMettreAJour(string nom, IEnumerable<DataPoint> points)
         {
             if (!_series.TryGetValue(nom, out var series))
@@ -74,12 +97,16 @@ namespace GraphGen
 
             foreach (var series in seriesAffichees)
             {
-                var points = chkNormaliser.Checked
-                    ? series.Points.Normalize()
-                    : series.Points;
+                var points = series.Points.InRange(dtpDebut.Value, dtpFin.Value);
 
-                var dates = points.Select(p => p.Date.ToOADate()).ToArray();
-                var valeurs = points.Select(p => p.Value).ToArray();
+                if (chkNormaliser.Checked)
+                    points = points.Normalize();
+
+                var pointsListe = points.ToList();
+                if (pointsListe.Count == 0) continue; // rien à tracer sur cette période
+
+                var dates = pointsListe.Select(p => p.Date.ToOADate()).ToArray();
+                var valeurs = pointsListe.Select(p => p.Value).ToArray();
 
                 var courbe = formsPlot1.Plot.Add.Scatter(dates, valeurs);
                 courbe.LegendText = series.Name;
@@ -88,6 +115,7 @@ namespace GraphGen
             formsPlot1.Plot.Axes.DateTimeTicksBottom();
             formsPlot1.Plot.Axes.Left.Label.Text = chkNormaliser.Checked ? "Variation (%)" : "Valeur";
             formsPlot1.Plot.Legend.IsVisible = true;
+            formsPlot1.Plot.Axes.AutoScale();
             formsPlot1.Refresh();
         }
 
@@ -97,6 +125,11 @@ namespace GraphGen
         }
 
         private void chkNormaliser_CheckedChanged(object sender, EventArgs e)
+        {
+            RafraichirGraphique();
+        }
+
+        private void dtp_ValueChanged(object sender, EventArgs e)
         {
             RafraichirGraphique();
         }
